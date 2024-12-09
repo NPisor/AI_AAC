@@ -1,0 +1,56 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/add_pictogram_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Pictogram Name Input -->
+        <EditText
+            android:id="@+id/item_name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter item name"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Parent Category Input -->
+        <EditText
+            android:id="@+id/parent_category_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter parent category"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
+        <EditText
+            android:id="@+id/keyword_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter keywords:"
+            android:padding="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Capture Image Button -->
+        <Button
+            android:id="@+id/capture_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Capture Image"
+            android:layout_marginBottom="16dp" />
+
+
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/save_pictogram_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+    </LinearLayout>
+</ScrollView>

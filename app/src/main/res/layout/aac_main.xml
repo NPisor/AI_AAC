@@ -1,0 +1,120 @@
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Main Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Toolbar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            android:title="AI AAC"
+            android:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <!-- Content Area -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <!-- Left Side: Main Content -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="vertical">
+
+                <!-- Back Button and AI Message Display -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <Button
+                        android:id="@+id/back_button"
+                        android:layout_width="118dp"
+                        android:layout_height="50dp"
+                        android:text="Back"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/aiMessage"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:background="@drawable/message_background"
+                        android:padding="16dp"
+                        android:text="AI message will appear here"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <!-- Progress Text -->
+                <TextView
+                    android:id="@+id/progressText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="8dp"
+                    android:text="Model download progress will appear here"
+                    android:textSize="16sp"
+                    android:visibility="gone" />
+
+                <!-- Scrollable Grid Layout -->
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:paddingTop="20dp"
+                    android:fillViewport="true">
+
+                    <GridLayout
+                        android:id="@+id/grid_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:columnCount="3"
+                        android:padding="8dp" />
+                </ScrollView>
+            </LinearLayout>
+
+            <!-- Right Side: Sequence Display -->
+            <ScrollView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:id="@+id/sequence_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+                    <!-- Sequence of selected pictograms will be dynamically added here -->
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Navigation Drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:menu="@menu/navigation_menu"
+        android:fitsSystemWindows="true" />
+</androidx.drawerlayout.widget.DrawerLayout>

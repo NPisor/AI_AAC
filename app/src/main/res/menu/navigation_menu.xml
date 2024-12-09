@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_add_pictogram"
+        android:icon="@drawable/addsign"
+        android:title="Create New Pictogram" />
+    <item
+        android:id="@+id/nav_clear_json"
+        android:icon="@drawable/garbage"
+        android:title="Clear Custom Pictograms" />
+</menu>

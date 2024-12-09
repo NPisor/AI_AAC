@@ -1,0 +1,234 @@
+{
+    "Food": {
+        "Image_File": "eat.png",
+        "Default_Response": "What food would you like to choose?"
+    },
+    "Cereal": {
+        "ID": 1,
+        "Image_File": "cereal.png",
+        "Parent_Category": "Food",
+        "Default_Response": "Cereal sounds like a tasty choice!"
+    },
+    "Donut": {
+        "ID": 3,
+        "Image_File": "donut.png",
+        "Parent_Category": "Food",
+        "Default_Response": "Donuts are sweet and yummy!"
+    },
+    "Bacon": {
+        "ID": 4,
+        "Image_File": "bacon.png",
+        "Parent_Category": "Food",
+        "Default_Response": "Bacon is crispy and delicious!"
+    },
+    "Sandwich": {
+        "ID": 1,
+        "Image_File": "sandwich.png",
+        "Parent_Category": "Food",
+        "Default_Response": "Sandwiches make a great snack!"
+    },
+    "Soup": {
+        "ID": 2,
+        "Image_File": "soup.png",
+        "Parent_Category": "Food",
+        "Default_Response": "Soup is warm and comforting!"
+    },
+    "Noodles": {
+        "ID": 1,
+        "Image_File": "noodles.png",
+        "Parent_Category": "Food",
+        "Default_Response": "Noodles are fun to eat!"
+    },
+    "Burger": {
+        "ID": 2,
+        "Image_File": "burger.png",
+        "Parent_Category": "Food",
+        "Default_Response": "Burgers are great for lunch!"
+    },
+    "Steak": {
+        "ID": 3,
+        "Image_File": "steak.png",
+        "Parent_Category": "Food",
+        "Default_Response": "Steak is perfect for dinner!"
+    },
+    "Popcorn": {
+        "ID": 1,
+        "Image_File": "popcorn.png",
+        "Parent_Category": "Food",
+        "Default_Response": "Popcorn is perfect for movie time!"
+    },
+    "Candy": {
+        "ID": 2,
+        "Image_File": "candy.png",
+        "Parent_Category": "Food",
+        "Default_Response": "Candy is sweet and fun!"
+    },
+    "Cookie": {
+        "ID": 3,
+        "Image_File": "cookie.png",
+        "Parent_Category": "Food",
+        "Default_Response": "Cookies are a tasty treat!"
+    },
+    "Drink": {
+        "Image_File": "milk.png",
+        "Default_Response": "What would you like to drink?"
+    },
+    "Milk": {
+        "ID": 1,
+        "Image_File": "milk.png",
+        "Parent_Category": "Drink",
+        "Default_Response": "Milk is healthy and delicious!"
+    },
+    "Juice": {
+        "ID": 2,
+        "Image_File": "juice.png",
+        "Parent_Category": "Drink",
+        "Default_Response": "Juice is refreshing!"
+    },
+    "Water": {
+        "ID": 3,
+        "Image_File": "water_drink.png",
+        "Parent_Category": "Drink",
+        "Default_Response": "Water is always a good choice!"
+    },
+    "Emotions": {
+        "Image_File": "feel.png",
+        "Default_Response": "How are you feeling today?"
+    },
+    "Sad": {
+        "ID": 1,
+        "Image_File": "sad.png",
+        "Modification": "Cheery, Supportive",
+        "Suggestions": ["Family", "Toys", "Food"],
+        "Parent_Category": "Emotions",
+        "Default_Response": "I'm here for you. Do you want to play or have a snack to feel better?"
+    },
+    "Happy": {
+        "ID": 2,
+        "Image_File": "happy.png",
+        "Parent_Category": "Emotions",
+        "Default_Response": "I'm so glad you're feeling happy!"
+    },
+    "Angry": {
+        "ID": 3,
+        "Image_File": "angry.png",
+        "Modification": "Understanding, Supportive",
+        "Suggestions": ["Family", "Food", "Bedtime"],
+        "Parent_Category": "Emotions",
+        "Default_Response": "It's okay to feel angry. Maybe a snack or a rest would help?"
+    },
+    "Tired": {
+        "ID": 4,
+        "Image_File": "tired.png",
+        "Modification": "Relaxed, Serene",
+        "Suggestions": ["Bedtime"],
+        "Parent_Category": "Emotions",
+        "Default_Response": "You seem tired. Would you like to get ready for bed?"
+    },
+    "Bored": {
+        "ID": 5,
+        "Image_File": "bored.png",
+        "Modification": "Peppy, Energetic, Happy, Encouraging",
+        "Suggestions": ["Play", "Food", "Family", "Entertainment"],
+        "Parent_Category": "Emotions",
+        "Default_Response": "Let's find something fun to do! Would you like to play or watch something?"
+    },
+    "Entertainment": {
+        "Image_File": "tablet.png",
+        "Default_Response": "What would you like to do for fun?"
+    },
+    "TV": {
+        "ID": 1,
+        "Image_File": "tv.png",
+        "Parent_Category": "Entertainment",
+        "Default_Response": "Watching TV can be fun!"
+    },
+    "Tablet": {
+        "ID": 2,
+        "Image_File": "tablet.png",
+        "Parent_Category": "Entertainment",
+        "Default_Response": "Tablets have so many games!"
+    },
+    "Toys": {
+        "ID": 3,
+        "Image_File": "toys.png",
+        "Parent_Category": "Entertainment",
+        "Default_Response": "Toys are fun to play with!"
+    },
+    "Routine": {
+        "Image_File": "bath.png",
+        "Default_Response": "Let's get ready for the day!"
+    },
+    "Bath": {
+        "ID": 1,
+        "Image_File": "bath.png",
+        "Parent_Category": "Routine",
+        "Default_Response": "Time for a nice bath!"
+    },
+    "Drive": {
+        "ID": 2,
+        "Image_File": "car.png",
+        "Parent_Category": "Routine",
+        "Default_Response": "Going for a drive is exciting!"
+    },
+    "Brush_Teeth": {
+        "ID": 3,
+        "Image_File": "brush_teeth.png",
+        "Parent_Category": "Routine",
+        "Default_Response": "Don't forget to brush your teeth!"
+    },
+    "Brush_Hair": {
+        "ID": 4,
+        "Image_File": "brush_hair.png",
+        "Parent_Category": "Routine",
+        "Default_Response": "Let's brush your hair!"
+    },
+    "Tie_Shoes": {
+        "ID": 5,
+        "Image_File": "tie_shoes.png",
+        "Parent_Category": "Routine",
+        "Default_Response": "Let's tie your shoes!"
+    },
+    "Bedtime": {
+        "ID": 6,
+        "Image_File": "bedtime.png",
+        "Suggestions": ["Brush_Teeth", "Bath"],
+        "Parent_Category": "Routine",
+        "Default_Response": "Let's get ready for bed. Do you want to brush your teeth or take a bath first?"
+    },
+    "Actions": {
+        "Default_Response": "What would you like to do?"
+    },
+    "Want": {
+        "ID": 1,
+        "Image_File": "want.png",
+        "Suggestions": ["Food", "Drink", "Entertainment"],
+        "AI_Hint": "Prompt the user to specify what they want.",
+        "Parent_Category": "Actions",
+        "Default_Response": "What do you want? Maybe a snack, drink, or something fun?"
+    },
+    "Like": {
+        "ID": 2,
+        "Image_File": "like.png",
+        "Suggestions": ["Food", "Drink", "Entertainment", "Routine", "Family"],
+        "AI_Hint": "Encourage the user to explore items they like.",
+        "Parent_Category": "Actions",
+        "Default_Response": "What is it that you like?"
+    },
+    "Love": {
+        "ID": 3,
+        "Image_File": "love.png",
+        "Suggestions": ["Food", "Drink", "Entertainment", "Routine", "Family"],
+        "AI_Hint": "Encourage the user to share what they love.",
+        "Parent_Category": "Actions",
+        "Default_Response": "Tell me what you love! Is it a food, a place, or someone in your family?"
+    },
+    "Feel": {
+        "ID": 4,
+        "Image_File": "feel.png",
+        "Suggestions": ["Emotions"],
+        "AI_Hint": "Ask the user to select an emotion.",
+        "Parent_Category": "Actions",
+        "Default_Response": "How do you feel? Tell me with a picture!"
+    }
+}
