@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -62,6 +63,7 @@ public class AddPictogramActivity extends AppCompatActivity {
         keywordsInput = findViewById(R.id.keyword_input);
         Button captureImageButton = findViewById(R.id.capture_image_button);
         Button saveButton = findViewById(R.id.save_pictogram_button);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Launch Camera to Capture Image
         captureImageButton.setOnClickListener(v -> {

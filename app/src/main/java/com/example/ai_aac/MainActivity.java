@@ -3,6 +3,7 @@ package com.example.ai_aac;
 import static com.example.ai_aac.AddPictogramActivity.readFromFile;
 import static com.example.ai_aac.AddPictogramActivity.writeToFile;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -16,6 +17,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.text.InputType;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Menu;
@@ -23,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -83,6 +86,10 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
 
     private Set<String> addedPictograms = new HashSet<>();
 
+    private DatabaseHelper dbHelper;
+
+    private SocketServerHelper socketHelper;
+
     private String lastRootButtonPressed = null;
     private boolean isGeneratingResponse = false;
 
@@ -99,6 +106,25 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        socketHelper = new SocketServerHelper(new SocketServerHelper.ConnectionCallback() {
+            @Override
+            public void onMessageReceived(String message) {
+                Log.d(TAG, "Received message: " + message);
+                // Handle received messages if necessary
+            }
+
+            @Override
+            public void onClientConnected(String clientAddress) {
+                Log.d(TAG, "Client connected: " + clientAddress);
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Caregiver connected!", Toast.LENGTH_SHORT).show());
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                Log.e(TAG, "Socket error: " + errorMessage);
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Socket error: " + errorMessage, Toast.LENGTH_SHORT).show());
+            }
+        });
         textToSpeech = new TextToSpeech(getApplicationContext(), status -> {
             if (status != TextToSpeech.ERROR) {
                 textToSpeech.setLanguage(Locale.US);
@@ -130,6 +156,15 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
                     resetGrid();
                     loadPictogramsFromJSON();
                     return true;
+                } else if (item.getItemId() == R.id.nav_caregiver_mode) {
+                    showIpInputDialog();
+                    return true;
+                } else if (item.getItemId() == R.id.nav_start_server) {
+                    startServer();
+                    return true;
+                } else if (item.getItemId() == R.id.nav_server_credentials) {
+                    showPairingPopup();
+                    return true;
                 }
                 return false;
             });
@@ -145,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
         sequenceLayout = findViewById(R.id.sequence_layout);
         progressText = findViewById(R.id.progressText);
         //deleteInternalPictogramKey();
+        dbHelper = new DatabaseHelper(this, "messages.db", null, 1);
         copyStockImagesToInternalStorage();
         copyPictogramKeyToInternalStorage();
         loadPictogramsFromJSON();
@@ -265,6 +301,7 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
             Log.d(TAG, "Cache hit for prompt: " + prompt);
             displayResponse(cachedResponse);
             narrateResponse(cachedResponse);
+            broadcastGeneratedMessage(prompt, cachedResponse);
             return;
         }
 
@@ -336,6 +373,7 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
                 );
 
                 String finalResponse = delimiterIndex != -1 ? response.substring(0, delimiterIndex + 1) : response;
+                broadcastGeneratedMessage(prompt, finalResponse);
 
                 // Update the UI with the final response
                 runOnUiThread(() -> {
@@ -697,6 +735,9 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
     protected void onDestroy() {
         if (tokenizer != null) tokenizer.close();
         if (model != null) model.close();
+        if (socketHelper != null) {
+            socketHelper.stopServer();
+        }
         if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();
@@ -828,4 +869,91 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
             Log.e(TAG, "Error loading pictograms", e);
         }
     }
+
+    private void broadcastGeneratedMessage(String pictogramString, String generatedResponse) {
+        // Save the message to the local database
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        dbHelper.insertMessage(pictogramString, generatedResponse, timestamp);
+
+        // Construct the message JSON
+        JSONObject messageJson = new JSONObject();
+        try {
+            messageJson.put("Pictogram_String", pictogramString);
+            messageJson.put("Generated_Response", generatedResponse);
+            messageJson.put("Time_Created", timestamp);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error constructing message JSON", e);
+            return;
+        }
+
+        // Send the message to all connected devices
+        socketHelper.broadcastMessage(messageJson.toString());
+    }
+
+    private void startServer() {
+        new Thread(() -> {
+            socketHelper.startServer();
+
+            // Retrieve the local IP address
+            String localIp = NetworkUtils.getWifiIpAddress(this);
+            if (localIp == null) {
+                localIp = NetworkUtils.getLocalIpAddress();
+            }
+
+            if (localIp != null) {
+                String message = "Server started! IP: " + localIp + " Port: " + SocketServerHelper.PORT;
+                Log.d(TAG, message);
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show());
+            } else {
+                runOnUiThread(() -> Toast.makeText(MainActivity.this, "Unable to determine IP address.", Toast.LENGTH_SHORT).show());
+            }
+        }).start();
+    }
+
+    private void showIpInputDialog() {
+        // Create a dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter IP Address");
+
+        // Set up the input field
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
+        input.setHint("e.g., 192.168.1.100");
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            String ipAddress = input.getText().toString().trim();
+            if (!ipAddress.isEmpty()) {
+                // Start CaregiverModeActivity with the entered IP
+                Intent intent = new Intent(MainActivity.this, CaregiverModeActivity.class);
+                intent.putExtra("server_ip", ipAddress); // Pass the IP to the activity
+                startActivity(intent);
+            } else {
+                Toast.makeText(MainActivity.this, "IP Address cannot be empty", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
+    private void showPairingPopup() {
+        // Retrieve the device's IP address
+        String ipAddress = NetworkUtils.getWifiIpAddress(this); // true for IPv4
+        int port = 12345; // Use your server's port
+
+        // Create a message with connection details
+        String pairingInfo = "Server IP: " + ipAddress + "\nPort: " + port;
+
+        // Display in an AlertDialog
+        new AlertDialog.Builder(this)
+                .setTitle("Pair Caretaker Device")
+                .setMessage(pairingInfo)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+
+
 }
