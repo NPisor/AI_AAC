@@ -89,5 +89,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return latestTimestamp;
     }
 
+    public void clearMessages() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM messages");
+        db.close();
+    }
 
 }

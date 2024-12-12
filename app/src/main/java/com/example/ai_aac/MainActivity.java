@@ -1,5 +1,6 @@
 package com.example.ai_aac;
 
+import static android.content.ContentValues.TAG;
 import static com.example.ai_aac.AddPictogramActivity.readFromFile;
 import static com.example.ai_aac.AddPictogramActivity.writeToFile;
 
@@ -95,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
 
     private static final String CACHE_FILE_NAME = "responseCache.json";
 
+    private PictogramManager pictogramManager;
+
     private Map<String, String> responseCache = new HashMap<>();
 
 
@@ -106,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        pictogramManager = PictogramManager.getInstance();
         socketHelper = new SocketServerHelper(new SocketServerHelper.ConnectionCallback() {
             @Override
             public void onMessageReceived(String message) {
@@ -181,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
         progressText = findViewById(R.id.progressText);
         //deleteInternalPictogramKey();
         dbHelper = new DatabaseHelper(this, "messages.db", null, 1);
+        dbHelper.clearMessages();
         copyStockImagesToInternalStorage();
         copyPictogramKeyToInternalStorage();
         loadPictogramsFromJSON();
@@ -243,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
             }
 
             loadInitialPictograms();
+            PictogramManager.getInstance().setPictogramMap((HashMap<String, Pictogram>) pictogramMap);
 
         } catch (JSONException | IOException e) {
             Log.e(TAG, "Error loading or parsing JSON file", e);
@@ -605,7 +611,12 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
     private void displayPictograms(List<Pictogram> pictograms) {
         gridLayout.removeAllViews();  // Clear previous views immediately
         for (Pictogram pictogram : pictograms) {
-            createPictogramButton(pictogram); // Add new buttons for current level
+            Button button = PictogramManager.getInstance().createPictogramButton(this, pictogram);
+            button.setOnClickListener(v -> {
+                Log.d(TAG, "Button pressed: " + pictogram.getLabel());
+                handlePictogramSelection(pictogram.getLabel(), pictogram);
+            });
+            gridLayout.addView(button);
         }
     }
 
@@ -649,47 +660,6 @@ public class MainActivity extends AppCompatActivity implements Consumer<String> 
 
         // Add the button to the sequence layout
         sequenceLayout.addView(sequenceButton);
-    }
-
-
-
-
-    private void createPictogramButton(Pictogram pictogram) {
-        Button button = new Button(this);
-        button.setText(pictogram.getLabel());
-        button.setTextColor(getResources().getColor(R.color.black));
-
-        // Load and set the icon from assets, if available
-        String imageFileName = pictogram.getImageFile();
-        if (imageFileName != null) {
-            try {
-                // Load the image from internal storage
-                File imageFile = new File(getFilesDir(), imageFileName);
-                if (imageFile.exists()) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath());
-                    if (bitmap != null) {
-                        Drawable drawable = new BitmapDrawable(getResources(), bitmap);
-                        button.setBackgroundResource(R.drawable.button_background);
-                        button.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
-                    } else {
-                        Log.e(TAG, "Failed to decode bitmap from file: " + imageFile.getAbsolutePath());
-                    }
-                } else {
-                    Log.e(TAG, "Image file not found in internal storage: " + imageFile.getAbsolutePath());
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error loading image from internal storage: " + imageFileName, e);
-            }
-        }
-
-
-        // Set button click to handle pictogram selection based on suggestions
-        button.setOnClickListener(v -> {
-            Log.d(TAG, "Button pressed: " + pictogram.getLabel());
-            handlePictogramSelection(pictogram.getLabel(), pictogram);
-        });
-
-        gridLayout.addView(button);
     }
 
     private void setupBackButton() {
